@@ -1,18 +1,21 @@
 FROM nginx:latest
 
+USER root
+
 WORKDIR /home/
 
 COPY server/main.c /home/main.c
 COPY server/run.sh /home/run.sh
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
 
-# EXPOSE 8080
 
-RUN apt update && \
+RUN	apt update && \
     apt upgrade && \
     apt install -y spawn-fcgi \
-    libfcgi-dev gcc && \
-    sh run.sh
+    libfcgi-dev gcc; \
+	rm -rf /var/lib/apt/lists/*
+    
 
-# ENTRYPOINT bash run.sh
+# CMD ["bash", "./run.sh"]
+ENTRYPOINT bash run.sh
 
